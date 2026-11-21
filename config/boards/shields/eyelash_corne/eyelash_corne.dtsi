@@ -159,3 +159,40 @@ nice_view_spi: &spi0 {
         color-mapping = <LED_COLOR_ID_GREEN LED_COLOR_ID_RED LED_COLOR_ID_BLUE>;
     };
 };
+
+
+/*
+ * Eyelash Peripherals "Classic White, OLED" variant:
+ * the vendor's zmk-corne-oled shield uses an I2C SSD1306 display,
+ * 128x32 pixels, at address 0x3c.  Keep the existing keyboard matrix,
+ * lighting, and split definitions from the working Selenium port.
+ *
+ * I2C0 pinctrl already comes from nice_nano@2:
+ * SDA = P0.17; SCL = P0.20.
+ * Source: a741725193/zmk-corne-oled (eyelash_corne.dtsi).
+ */
+/ {
+    chosen {
+        zephyr,display = &oled;
+    };
+};
+
+&i2c0 {
+    status = "okay";
+
+    oled: ssd1306@3c {
+        compatible = "solomon,ssd1306fb";
+        reg = <0x3c>;
+        width = <128>;
+        height = <32>;
+        segment-offset = <0>;
+        page-offset = <0>;
+        display-offset = <0>;
+        multiplex-ratio = <31>;
+        segment-remap;
+        com-invdir;
+        com-sequential;
+        inversion-on;
+        prechargep = <0x22>;
+    };
+};
