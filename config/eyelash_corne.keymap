@@ -9,3 +9,61 @@
     LOUT3  LROW3  &kp C_MUTE           &kp DOWN                      RROW3  ROUT3 \
                   LT1  LT2  LT3                      RT3  RT2  RT1
 #include <aekeynox/selenium.keymap>
+
+/*
+ * Eyelash left rotary encoder (rotation only).
+ * The physical encoder push is already a normal &kp C_MUTE key above;
+ * leave that key and all Selenium HRM mappings untouched.
+ *
+ * Right hand, default HRM settings:
+ *   hold right Space -> NavNum -> scroll
+ *   hold right Enter -> FnMedia -> Mac display brightness
+ *   otherwise -> volume
+ *
+ * Use the stock ZMK sensor rotation behavior for HID keycodes and
+ * a sensor-rotate behavior for real mouse-wheel scroll events.
+ */
+#include <dt-bindings/zmk/pointing.h>
+
+/ {
+    behaviors {
+        eyelash_scroll_encoder: eyelash_scroll_encoder {
+            compatible = "zmk,behavior-sensor-rotate";
+            #sensor-binding-cells = <0>;
+            bindings = <&msc SCRL_UP>, <&msc SCRL_DOWN>;
+            tap-ms = <100>;
+        };
+    };
+};
+
+&base_layer {
+    sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN>;
+};
+
+&num_lock_layer {
+    sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN>;
+};
+
+&symbols_layer {
+    sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN>;
+};
+
+&vim_nav_layer {
+    sensor-bindings = <&eyelash_scroll_encoder>;
+};
+
+&nav_num_layer {
+    sensor-bindings = <&eyelash_scroll_encoder>;
+};
+
+&cal_tee_layer {
+    sensor-bindings = <&eyelash_scroll_encoder>;
+};
+
+&num_row_layer {
+    sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN>;
+};
+
+&fn_media_layer {
+    sensor-bindings = <&inc_dec_kp C_BRI_UP C_BRI_DN>;
+};
